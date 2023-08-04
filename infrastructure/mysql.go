@@ -40,3 +40,52 @@ func NewSqlHandler() *sqlHandler {
 	return sqlHandler
 
 }
+
+func (handler *sqlHandler) Find(obj interface{}, value ...interface{}) error {
+	if err := handler.db.Find(obj).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (handler *sqlHandler) First(obj interface{}, where ...interface{}) error {
+	if err := handler.db.First(obj, where...).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (handler *sqlHandler) Create(obj interface{}) error {
+	if err := handler.db.Create(obj).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (handler *sqlHandler) Save(obj interface{}) error {
+	if err := handler.db.Save(obj).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (handler *sqlHandler) Delete(obj interface{}, value ...interface{}) error {
+	if err := handler.db.Delete(obj).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (handler *sqlHandler) Exec(sql string, values ...interface{}) error {
+	if err := handler.db.Exec(sql, values...).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (handler *sqlHandler) Raw(sql string, values ...interface{}) error {
+	if err := handler.db.Raw(sql, values...).Error; err != nil {
+		return err
+	}
+	return nil
+}
