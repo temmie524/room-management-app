@@ -2,6 +2,8 @@ package model
 
 import "time"
 
+type Users []User
+
 type User struct {
 	ID        uint      `json:"id" gorm:"primary_key"`
 	LastName  string    `json:"last_name" gorm:"not null"`
