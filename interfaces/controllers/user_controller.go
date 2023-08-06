@@ -11,12 +11,12 @@ import (
 )
 
 type UserController struct {
-	Intetacter usecases.UserInteractor
+	Interacter usecases.UserInteractor
 }
 
 func NewUserController(sqlHandler database.SqlHandler) *UserController {
 	return &UserController{
-		Intetacter: usecases.UserInteractor{
+		Interacter: usecases.UserInteractor{
 			UserRepository: &database.UserRepository{
 				SqlHandler: sqlHandler,
 			},
@@ -25,7 +25,7 @@ func NewUserController(sqlHandler database.SqlHandler) *UserController {
 }
 
 func (controller *UserController) Index(c echo.Context) (err error) {
-	users, err := controller.Intetacter.Users()
+	users, err := controller.Interacter.Users()
 	if err != nil {
 		c.JSON(500, NewError(err))
 		return
@@ -36,7 +36,7 @@ func (controller *UserController) Index(c echo.Context) (err error) {
 
 func (controller *UserController) Show(c echo.Context) (err error) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	user, err := controller.Intetacter.UserById(id)
+	user, err := controller.Interacter.UserById(id)
 	if err != nil {
 		c.JSON(500, NewError(err))
 		return
@@ -48,7 +48,7 @@ func (controller *UserController) Show(c echo.Context) (err error) {
 func (controller *UserController) Create(c echo.Context) (err error) {
 	u := model.User{}
 	c.Bind(&u)
-	user, err := controller.Intetacter.Add(u)
+	user, err := controller.Interacter.Add(u)
 	if err != nil {
 		c.JSON(500, NewError(err))
 		return
@@ -60,7 +60,7 @@ func (controller *UserController) Create(c echo.Context) (err error) {
 func (controller *UserController) Save(c echo.Context) (err error) {
 	u := model.User{}
 	c.Bind(&u)
-	user, err := controller.Intetacter.Update(u)
+	user, err := controller.Interacter.Update(u)
 	if err != nil {
 		c.JSON(500, NewError(err))
 		return
@@ -74,7 +74,7 @@ func (controller *UserController) Delete(c echo.Context) (err error) {
 	user := model.User{
 		ID: uint(id),
 	}
-	err = controller.Intetacter.DeleteById(user)
+	err = controller.Interacter.DeleteById(user)
 	if err != nil {
 		c.JSON(500, NewError(err))
 		return

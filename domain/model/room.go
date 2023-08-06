@@ -8,4 +8,6 @@ type Room struct {
 	Building  string    `json:"building" gorm:"not null"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+
+	Reservations []Reservation `gorm:"ForeignKey:RoomID"`
 }
