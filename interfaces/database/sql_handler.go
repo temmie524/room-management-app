@@ -8,4 +8,5 @@ type SqlHandler interface {
 	Delete(obj interface{}, value ...interface{}) error
 	Exec(sql string, value ...interface{}) error
 	Raw(sql string, value ...interface{}) error
+	FindReservation(obj interface{}, value ...interface{}) error
 }
