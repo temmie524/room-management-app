@@ -35,5 +35,5 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	db.Debug().AutoMigrate(&model.User{})
+	db.Debug().AutoMigrate(&model.User{}, &model.Room{}, &model.Reservation{})
 }
