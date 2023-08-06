@@ -7,7 +7,7 @@ type ReservationRepository struct {
 }
 
 func (repo *ReservationRepository) FindAll() (reservations model.Reservations, err error) {
-	if err = repo.Find(&reservations); err != nil {
+	if err = repo.FindReservation(&reservations); err != nil {
 		return
 	}
 	return

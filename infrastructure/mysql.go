@@ -41,14 +41,12 @@ func NewSqlHandler() *sqlHandler {
 
 }
 
-/*
 func (handler *sqlHandler) Find(obj interface{}, value ...interface{}) error {
 	if err := handler.db.Find(obj).Error; err != nil {
 		return err
 	}
 	return nil
 }
-*/
 
 func (handler *sqlHandler) First(obj interface{}, where ...interface{}) error {
 	if err := handler.db.First(obj, where...).Error; err != nil {
@@ -58,7 +56,7 @@ func (handler *sqlHandler) First(obj interface{}, where ...interface{}) error {
 }
 
 // Reservation専用のFind。UserとRoomをPreloadする
-func (handler *sqlHandler) Find(obj interface{}, value ...interface{}) error {
+func (handler *sqlHandler) FindReservation(obj interface{}, value ...interface{}) error {
 	if err := handler.db.Preload("User").Preload("Room").Find(obj).Error; err != nil {
 		return err
 	}

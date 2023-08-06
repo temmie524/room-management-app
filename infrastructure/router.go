@@ -12,6 +12,7 @@ func Init() {
 
 	userController := controllers.NewUserController(NewSqlHandler())
 	reservationController := controllers.NewReservationController(NewSqlHandler())
+	roomController := controllers.NewRoomController(NewSqlHandler())
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
@@ -29,6 +30,10 @@ func Init() {
 	e.POST("/reservations/new", func(c echo.Context) error { return reservationController.Create(c) })
 	e.PUT("/reservations/:id", func(c echo.Context) error { return reservationController.Save(c) })
 	e.DELETE("/reservations/:id", func(c echo.Context) error { return reservationController.Delete(c) })
+
+	//Room Routes
+	e.GET("/rooms", func(c echo.Context) error { return roomController.Index(c) })
+	e.GET("/rooms/:id", func(c echo.Context) error { return roomController.Show(c) })
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
