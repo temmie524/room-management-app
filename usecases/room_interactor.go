@@ -6,12 +6,10 @@ type RoomInteractor struct {
 	RoomRepository RoomRepository
 }
 
-func (interactor *RoomInteractor) Rooms() (rooms model.Rooms, err error) {
-	rooms, err = interactor.RoomRepository.FindAll()
-	return
+func (i *RoomInteractor) Rooms() (model.Rooms, error) {
+	return i.RoomRepository.FindAll()
 }
 
-func (interactor *RoomInteractor) RoomById(id int) (room model.Room, err error) {
-	room, err = interactor.RoomRepository.FindById(id)
-	return
+func (i *RoomInteractor) RoomById(id int) (model.Room, error) {
+	return i.RoomRepository.FindById(id)
 }

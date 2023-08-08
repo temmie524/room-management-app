@@ -6,27 +6,23 @@ type ReservationInteractor struct {
 	ReservationRepository ReservationRepository
 }
 
-func (interactor *ReservationInteractor) Add(r model.Reservation) (reservation model.Reservation, err error) {
-	reservation, err = interactor.ReservationRepository.Store(r)
-	return
+func (i *ReservationInteractor) Add(r model.Reservation) (model.Reservation, error) {
+	return i.ReservationRepository.Store(r)
 }
 
-func (interactor *ReservationInteractor) Update(r model.Reservation) (reservation model.Reservation, err error) {
-	reservation, err = interactor.ReservationRepository.Update(r)
-	return
+func (i *ReservationInteractor) Update(r model.Reservation) (model.Reservation, error) {
+	return i.ReservationRepository.Update(r)
 }
 
-func (interactor *ReservationInteractor) DeleteById(r model.Reservation) (err error) {
-	err = interactor.ReservationRepository.DeleteById(r)
-	return
+func (i *ReservationInteractor) DeleteById(r model.Reservation) error {
+	return i.ReservationRepository.DeleteById(r)
 }
 
-func (interacter *ReservationInteractor) Reservations() (reservations model.Reservations, err error) {
-	reservations, err = interacter.ReservationRepository.FindAll()
-	return
+func (interacter *ReservationInteractor) Reservations() (model.Reservations, error) {
+	return interacter.ReservationRepository.FindAll()
 }
 
-func (interactor *ReservationInteractor) ReservationById(identifier int) (reservation model.Reservation, err error) {
-	reservation, err = interactor.ReservationRepository.FindById(identifier)
-	return
+func (i *ReservationInteractor) ReservationById(identifier int) (model.Reservation, error) {
+	return i.ReservationRepository.FindById(identifier)
+
 }
