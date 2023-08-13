@@ -1,7 +1,9 @@
 package infrastructure
 
 import (
-	"room_app_back/interfaces/controllers"
+	"room_app_back/interfaces/controller"
+	"room_app_back/interfaces/database"
+	"room_app_back/usecases/interactors"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -10,9 +12,19 @@ import (
 func Init() {
 	e := echo.New()
 
-	userController := controllers.NewUserController(NewSqlHandler())
-	reservationController := controllers.NewReservationController(NewSqlHandler())
-	roomController := controllers.NewRoomController(NewSqlHandler())
+	sqlhandler := NewSqlHandler()
+
+	userRepository := database.NewUserRepository(sqlhandler)
+	userInteractor := interactors.NewUserInteractor(userRepository)
+	userController := controller.NewUserController(*userInteractor)
+
+	reservationRepository := database.NewReservationRepository(sqlhandler)
+	reserationInteractor := interactors.NewReservationInteractor(reservationRepository)
+	reservationController := controller.NewReservationController(*reserationInteractor)
+
+	roomRepository := database.NewRoomRepository(sqlhandler)
+	roomInteractor := interactors.NewRoomInteractor(roomRepository)
+	roomController := controller.NewRoomController(*roomInteractor)
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
