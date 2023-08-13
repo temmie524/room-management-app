@@ -10,11 +10,11 @@ import (
 	"gorm.io/gorm"
 )
 
-type sqlHandler struct {
+type SqlHandler struct {
 	db *gorm.DB
 }
 
-func NewSqlHandler() *sqlHandler {
+func NewSqlHandler() *SqlHandler {
 
 	if os.Getenv("GO_ENV") == "dev" {
 		err := godotenv.Load()
@@ -35,20 +35,20 @@ func NewSqlHandler() *sqlHandler {
 		log.Fatalln(err)
 	}
 
-	sqlHandler := new(sqlHandler)
-	sqlHandler.db = db
-	return sqlHandler
+	SqlHandler := new(SqlHandler)
+	SqlHandler.db = db
+	return SqlHandler
 
 }
 
-func (handler *sqlHandler) Find(obj interface{}, value ...interface{}) error {
+func (handler *SqlHandler) Find(obj interface{}, value ...interface{}) error {
 	if err := handler.db.Find(obj).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (handler *sqlHandler) First(obj interface{}, where ...interface{}) error {
+func (handler *SqlHandler) First(obj interface{}, where ...interface{}) error {
 	if err := handler.db.First(obj, where...).Error; err != nil {
 		return err
 	}
@@ -56,42 +56,42 @@ func (handler *sqlHandler) First(obj interface{}, where ...interface{}) error {
 }
 
 // Reservation専用のFind。UserとRoomをPreloadする
-func (handler *sqlHandler) FindReservation(obj interface{}, value ...interface{}) error {
+func (handler *SqlHandler) FindReservation(obj interface{}, value ...interface{}) error {
 	if err := handler.db.Preload("User").Preload("Room").Find(obj).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (handler *sqlHandler) Create(obj interface{}) error {
+func (handler *SqlHandler) Create(obj interface{}) error {
 	if err := handler.db.Create(obj).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (handler *sqlHandler) Save(obj interface{}) error {
+func (handler *SqlHandler) Save(obj interface{}) error {
 	if err := handler.db.Save(obj).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (handler *sqlHandler) Delete(obj interface{}, value ...interface{}) error {
+func (handler *SqlHandler) Delete(obj interface{}, value ...interface{}) error {
 	if err := handler.db.Delete(obj).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (handler *sqlHandler) Exec(sql string, values ...interface{}) error {
+func (handler *SqlHandler) Exec(sql string, values ...interface{}) error {
 	if err := handler.db.Exec(sql, values...).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (handler *sqlHandler) Raw(sql string, values ...interface{}) error {
+func (handler *SqlHandler) Raw(sql string, values ...interface{}) error {
 	if err := handler.db.Raw(sql, values...).Error; err != nil {
 		return err
 	}
