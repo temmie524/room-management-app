@@ -1,6 +1,6 @@
-package port
+package user
 
-import "room_app_back/domain/model"
+import model "room_app_back/domain/model"
 
 type UserRepository interface {
 	Store(model.User) (*model.User, error)

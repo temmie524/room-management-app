@@ -1,6 +1,6 @@
-package port
+package resservation
 
-import "room_app_back/domain/model"
+import model "room_app_back/domain/model"
 
 type ReservationRepository interface {
 	Store(model.Reservation) (*model.Reservation, error)

@@ -1,4 +1,4 @@
-package repository
+package reservation
 
 import "room_app_back/domain/model"
 

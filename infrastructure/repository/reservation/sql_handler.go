@@ -1,4 +1,4 @@
-package repository
+package reservation
 
 type SqlHandler interface {
 	Find(obj interface{}, value ...interface{}) error
@@ -6,7 +6,5 @@ type SqlHandler interface {
 	Create(obj interface{}) error
 	Save(obj interface{}) error
 	Delete(obj interface{}, value ...interface{}) error
-	Exec(sql string, value ...interface{}) error
-	Raw(sql string, value ...interface{}) error
 	FindReservation(obj interface{}, value ...interface{}) error
 }

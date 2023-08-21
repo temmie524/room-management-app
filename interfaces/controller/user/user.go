@@ -1,26 +1,26 @@
-package controller
+package user
 
 import (
 	"room_app_back/domain/model"
 	"room_app_back/pkg"
-	"room_app_back/usecases/interactors"
+	"room_app_back/usecase/user"
 	"strconv"
 
 	"github.com/labstack/echo"
 )
 
 type UserController struct {
-	ui interactors.UserInteractor
+	uu user.UserUsecase
 }
 
-func NewUserController(userInteractor interactors.UserInteractor) *UserController {
+func NewUserController(uu user.UserUsecase) *UserController {
 	return &UserController{
-		ui: userInteractor,
+		uu: uu,
 	}
 }
 
 func (uc *UserController) Index(c echo.Context) error {
-	users, err := uc.ui.Users()
+	users, err := uc.uu.Users()
 	if err != nil {
 		return c.JSON(500, pkg.NewError(err))
 	}
@@ -30,7 +30,7 @@ func (uc *UserController) Index(c echo.Context) error {
 
 func (uc *UserController) Show(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	user, err := uc.ui.UserById(id)
+	user, err := uc.uu.UserById(id)
 	if err != nil {
 		return c.JSON(500, pkg.NewError(err))
 	}
@@ -40,7 +40,7 @@ func (uc *UserController) Show(c echo.Context) error {
 func (uc *UserController) Create(c echo.Context) error {
 	u := model.User{}
 	c.Bind(&u)
-	user, err := uc.ui.Add(u)
+	user, err := uc.uu.Add(u)
 	if err != nil {
 		return c.JSON(500, pkg.NewError(err))
 	}
@@ -50,7 +50,7 @@ func (uc *UserController) Create(c echo.Context) error {
 func (uc *UserController) Save(c echo.Context) error {
 	u := model.User{}
 	c.Bind(&u)
-	user, err := uc.ui.Update(u)
+	user, err := uc.uu.Update(u)
 	if err != nil {
 		return c.JSON(500, pkg.NewError(err))
 	}
@@ -62,7 +62,7 @@ func (uc *UserController) Delete(c echo.Context) error {
 	user := model.User{
 		ID: uint(id),
 	}
-	err := uc.ui.DeleteById(user)
+	err := uc.uu.DeleteById(user)
 	if err != nil {
 		return c.JSON(500, pkg.NewError(err))
 	}

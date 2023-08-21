@@ -1,9 +1,17 @@
 package infrastructure
 
 import (
-	"room_app_back/domain/repository"
-	"room_app_back/interfaces/controller"
-	"room_app_back/usecases/interactors"
+	rere "room_app_back/infrastructure/repository/reservation"
+	rore "room_app_back/infrastructure/repository/room"
+	usre "room_app_back/infrastructure/repository/user"
+
+	reco "room_app_back/interfaces/controller/reservation"
+	roco "room_app_back/interfaces/controller/room"
+	usco "room_app_back/interfaces/controller/user"
+
+	reus "room_app_back/usecase/reservation"
+	rous "room_app_back/usecase/room"
+	usus "room_app_back/usecase/user"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -14,17 +22,17 @@ func Init() {
 
 	sqlhandler := NewSqlHandler()
 
-	userRepository := repository.NewUserRepository(sqlhandler)
-	userInteractor := interactors.NewUserInteractor(userRepository)
-	userController := controller.NewUserController(*userInteractor)
+	userRepository := usre.NewUserRepository(sqlhandler)
+	userUsecase := usus.NewUserUsecase(*userRepository)
+	userController := usco.NewUserController(*userUsecase)
 
-	reservationRepository := repository.NewReservationRepository(sqlhandler)
-	reserationInteractor := interactors.NewReservationInteractor(reservationRepository)
-	reservationController := controller.NewReservationController(*reserationInteractor)
+	reservationRepository := rere.NewReservationRepository(sqlhandler)
+	reserationUsecase := reus.NewReservationUsecase(*reservationRepository)
+	reservationController := reco.NewReservationController(*reserationUsecase)
 
-	roomRepository := repository.NewRoomRepository(sqlhandler)
-	roomInteractor := interactors.NewRoomInteractor(roomRepository)
-	roomController := controller.NewRoomController(*roomInteractor)
+	roomRepository := rore.NewRoomRepository(sqlhandler)
+	roomUsecase := rous.NewRoomUsecase(*roomRepository)
+	roomController := roco.NewRoomController(*roomUsecase)
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())

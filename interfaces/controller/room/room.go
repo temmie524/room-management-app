@@ -1,25 +1,25 @@
-package controller
+package room
 
 import (
 	"room_app_back/pkg"
-	"room_app_back/usecases/interactors"
+	"room_app_back/usecase/room"
 	"strconv"
 
 	"github.com/labstack/echo"
 )
 
 type RoomController struct {
-	ri interactors.RoomInteractor
+	ru room.RoomUsecase
 }
 
-func NewRoomController(ri interactors.RoomInteractor) *RoomController {
+func NewRoomController(ru room.RoomUsecase) *RoomController {
 	return &RoomController{
-		ri: ri,
+		ru: ru,
 	}
 }
 
 func (rc *RoomController) Index(c echo.Context) error {
-	rooms, err := rc.ri.Rooms()
+	rooms, err := rc.ru.Rooms()
 	if err != nil {
 
 		return c.JSON(500, pkg.NewError(err))
@@ -29,7 +29,7 @@ func (rc *RoomController) Index(c echo.Context) error {
 
 func (rc *RoomController) Show(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	room, err := rc.ri.RoomById(id)
+	room, err := rc.ru.RoomById(id)
 	if err != nil {
 		return c.JSON(500, pkg.NewError(err))
 	}

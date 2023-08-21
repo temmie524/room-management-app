@@ -1,26 +1,26 @@
-package controller
+package reservation
 
 import (
 	"room_app_back/domain/model"
 	"room_app_back/pkg"
-	"room_app_back/usecases/interactors"
+	"room_app_back/usecase/reservation"
 	"strconv"
 
 	"github.com/labstack/echo"
 )
 
 type ReservationController struct {
-	ri interactors.ReservationInteractor
+	ru reservation.ReservationUsecase
 }
 
-func NewReservationController(ri interactors.ReservationInteractor) *ReservationController {
+func NewReservationController(ru reservation.ReservationUsecase) *ReservationController {
 	return &ReservationController{
-		ri: ri,
+		ru: ru,
 	}
 }
 
 func (rc *ReservationController) Index(c echo.Context) error {
-	reservations, err := rc.ri.Reservations()
+	reservations, err := rc.ru.Reservations()
 	if err != nil {
 		return c.JSON(500, pkg.NewError(err))
 	}
@@ -29,7 +29,7 @@ func (rc *ReservationController) Index(c echo.Context) error {
 
 func (rc *ReservationController) Show(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	reservation, err := rc.ri.ReservationById(id)
+	reservation, err := rc.ru.ReservationById(id)
 	if err != nil {
 		return c.JSON(500, pkg.NewError(err))
 	}
@@ -40,7 +40,7 @@ func (rc *ReservationController) Show(c echo.Context) error {
 func (rc *ReservationController) Create(c echo.Context) error {
 	r := model.Reservation{}
 	c.Bind(&r)
-	reservation, err := rc.ri.Add(r)
+	reservation, err := rc.ru.Add(r)
 	if err != nil {
 		return c.JSON(500, pkg.NewError(err))
 	}
@@ -50,7 +50,7 @@ func (rc *ReservationController) Create(c echo.Context) error {
 func (rc *ReservationController) Save(c echo.Context) error {
 	r := model.Reservation{}
 	c.Bind(&r)
-	reservation, err := rc.ri.Update(r)
+	reservation, err := rc.ru.Update(r)
 	if err != nil {
 		return c.JSON(500, pkg.NewError(err))
 	}
@@ -62,7 +62,7 @@ func (rc *ReservationController) Delete(c echo.Context) error {
 	reservation := model.Reservation{
 		ID: uint(id),
 	}
-	err := rc.ri.DeleteById(reservation)
+	err := rc.ru.DeleteById(reservation)
 	if err != nil {
 		return c.JSON(500, pkg.NewError(err))
 	}
