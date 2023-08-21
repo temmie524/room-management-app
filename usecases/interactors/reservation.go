@@ -33,5 +33,4 @@ func (ri *ReservationInteractor) Reservations() (*model.Reservations, error) {
 
 func (ri *ReservationInteractor) ReservationById(identifier int) (*model.Reservation, error) {
 	return ri.rr.FindById(identifier)
-
 }

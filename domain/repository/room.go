@@ -1,4 +1,4 @@
-package database
+package repository
 
 import "room_app_back/domain/model"
 

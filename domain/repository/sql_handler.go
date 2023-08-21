@@ -1,4 +1,4 @@
-package database
+package repository
 
 type SqlHandler interface {
 	Find(obj interface{}, value ...interface{}) error
