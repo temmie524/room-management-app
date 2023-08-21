@@ -1,8 +1,8 @@
 package infrastructure
 
 import (
+	"room_app_back/domain/repository"
 	"room_app_back/interfaces/controller"
-	"room_app_back/interfaces/database"
 	"room_app_back/usecases/interactors"
 
 	"github.com/labstack/echo"
@@ -14,20 +14,22 @@ func Init() {
 
 	sqlhandler := NewSqlHandler()
 
-	userRepository := database.NewUserRepository(sqlhandler)
+	userRepository := repository.NewUserRepository(sqlhandler)
 	userInteractor := interactors.NewUserInteractor(userRepository)
 	userController := controller.NewUserController(*userInteractor)
 
-	reservationRepository := database.NewReservationRepository(sqlhandler)
+	reservationRepository := repository.NewReservationRepository(sqlhandler)
 	reserationInteractor := interactors.NewReservationInteractor(reservationRepository)
 	reservationController := controller.NewReservationController(*reserationInteractor)
 
-	roomRepository := database.NewRoomRepository(sqlhandler)
+	roomRepository := repository.NewRoomRepository(sqlhandler)
 	roomInteractor := interactors.NewRoomInteractor(roomRepository)
 	roomController := controller.NewRoomController(*roomInteractor)
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+
+	e.Use(middleware.CORS())
 
 	//User Routes
 	e.GET("/users", func(c echo.Context) error { return userController.Index(c) })
