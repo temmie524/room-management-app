@@ -2,7 +2,7 @@ package reservation
 
 import (
 	"room_app_back/domain/model"
-	"room_app_back/infrastructure/repository/reservation"
+	"room_app_back/domain/repository/reservation"
 )
 
 type ReservationUsecase struct {

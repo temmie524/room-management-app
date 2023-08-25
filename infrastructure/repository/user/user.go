@@ -54,3 +54,12 @@ func (repo *UserRepository) DeleteById(user model.User) error {
 	}
 	return nil
 }
+
+// 引数については改修するかも
+func (repo *UserRepository) FindByEmail(u *model.User, email string) error {
+	if err := repo.First(u, "email=?", email); err != nil {
+		return err
+	}
+	return nil
+
+}

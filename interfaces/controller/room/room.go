@@ -5,7 +5,7 @@ import (
 	"room_app_back/usecase/room"
 	"strconv"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 type RoomController struct {

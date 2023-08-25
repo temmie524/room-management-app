@@ -6,7 +6,7 @@ import (
 	"room_app_back/usecase/reservation"
 	"strconv"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 type ReservationController struct {

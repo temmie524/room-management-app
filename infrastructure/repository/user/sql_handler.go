@@ -6,4 +6,5 @@ type SqlHandler interface {
 	Create(obj interface{}) error
 	Save(obj interface{}) error
 	Delete(obj interface{}, value ...interface{}) error
+	// Where(obj string, value ...interface{}) error
 }

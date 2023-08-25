@@ -97,3 +97,12 @@ func (handler *SqlHandler) Raw(sql string, values ...interface{}) error {
 	}
 	return nil
 }
+
+/*
+func (handler *SqlHandler) Where(sql string, value ...interface{}) error {
+	if err := handler.db.Where(sql, value...).Error; err != nil {
+		return err
+	}
+	return nil
+}
+*/

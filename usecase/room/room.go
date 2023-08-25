@@ -2,7 +2,7 @@ package room
 
 import (
 	"room_app_back/domain/model"
-	"room_app_back/infrastructure/repository/room"
+	"room_app_back/domain/repository/room"
 )
 
 type RoomUsecase struct {

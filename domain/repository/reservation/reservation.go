@@ -1,4 +1,4 @@
-package resservation
+package reservation
 
 import model "room_app_back/domain/model"
 

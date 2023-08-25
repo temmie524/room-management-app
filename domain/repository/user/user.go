@@ -8,4 +8,5 @@ type UserRepository interface {
 	DeleteById(model.User) error
 	FindAll() (*model.Users, error)
 	FindById(id int) (*model.User, error)
+	FindByEmail(*model.User, string) error
 }
