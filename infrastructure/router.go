@@ -39,17 +39,17 @@ func Init() {
 		//CookieMaxAge: 60,
 
 	}))
-	sqlhandler := NewSqlHandler()
+	db := NewDB()
 
-	userRepository := usre.NewUserRepository(sqlhandler)
+	userRepository := usre.NewUserRepository(db)
 	userUsecase := usus.NewUserUsecase(userRepository)
 	userController := usco.NewUserController(*userUsecase)
 
-	reservationRepository := rere.NewReservationRepository(sqlhandler)
+	reservationRepository := rere.NewReservationRepository(db)
 	reserationUsecase := reus.NewReservationUsecase(reservationRepository)
 	reservationController := reco.NewReservationController(*reserationUsecase)
 
-	roomRepository := rore.NewRoomRepository(sqlhandler)
+	roomRepository := rore.NewRoomRepository(db)
 	roomUsecase := rous.NewRoomUsecase(roomRepository)
 	roomController := roco.NewRoomController(*roomUsecase)
 

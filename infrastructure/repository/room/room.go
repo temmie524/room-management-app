@@ -1,20 +1,23 @@
 package room
 
-import "room_app_back/domain/model"
+import (
+	"room_app_back/domain/model"
+	"room_app_back/domain/repository/room"
+
+	"gorm.io/gorm"
+)
 
 type RoomRepository struct {
-	SqlHandler
+	db *gorm.DB
 }
 
-func NewRoomRepository(sqlHandler SqlHandler) *RoomRepository {
-	return &RoomRepository{
-		SqlHandler: sqlHandler,
-	}
+func NewRoomRepository(db *gorm.DB) room.RoomRepository {
+	return &RoomRepository{db}
 }
 
 func (repo *RoomRepository) FindAll() (*model.Rooms, error) {
 	rooms := model.Rooms{}
-	if err := repo.Find(&rooms); err != nil {
+	if err := repo.db.Find(&rooms).Error; err != nil {
 		return nil, err
 	}
 	return &rooms, nil
@@ -22,7 +25,7 @@ func (repo *RoomRepository) FindAll() (*model.Rooms, error) {
 
 func (repo *RoomRepository) FindById(id int) (*model.Room, error) {
 	room := model.Room{}
-	if err := repo.First(&room, id); err != nil {
+	if err := repo.db.First(&room, id).Error; err != nil {
 		return nil, err
 	}
 	return &room, nil

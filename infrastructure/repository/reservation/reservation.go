@@ -1,21 +1,24 @@
 package reservation
 
-import "room_app_back/domain/model"
+import (
+	"room_app_back/domain/model"
+	"room_app_back/domain/repository/reservation"
+
+	"gorm.io/gorm"
+)
 
 type ReservationRepository struct {
-	SqlHandler
+	db *gorm.DB
 }
 
-func NewReservationRepository(sqlHandler SqlHandler) *ReservationRepository {
-	return &ReservationRepository{
-		SqlHandler: sqlHandler,
-	}
+func NewReservationRepository(db *gorm.DB) reservation.ReservationRepository {
+	return &ReservationRepository{db}
 }
 
 func (repo *ReservationRepository) FindAll() (*model.Reservations, error) {
 	rs := model.Reservations{}
 
-	if err := repo.FindReservation(&rs); err != nil {
+	if err := repo.db.Find(&rs).Error; err != nil {
 		return nil, err
 	}
 	return &rs, nil
@@ -24,28 +27,28 @@ func (repo *ReservationRepository) FindAll() (*model.Reservations, error) {
 func (repo *ReservationRepository) FindById(id int) (*model.Reservation, error) {
 	r := model.Reservation{}
 
-	if err := repo.First(&r, id); err != nil {
+	if err := repo.db.First(&r, id).Error; err != nil {
 		return nil, err
 	}
 	return &r, nil
 }
 
 func (repo *ReservationRepository) Store(r model.Reservation) (*model.Reservation, error) {
-	if err := repo.Create(&r); err != nil {
+	if err := repo.db.Create(&r).Error; err != nil {
 		return nil, err
 	}
 	return &r, nil
 }
 
 func (repo *ReservationRepository) Update(r model.Reservation) (*model.Reservation, error) {
-	if err := repo.Save(&r); err != nil {
+	if err := repo.db.Save(&r).Error; err != nil {
 		return nil, err
 	}
 	return &r, nil
 }
 
 func (repo *ReservationRepository) DeleteById(r model.Reservation) error {
-	if err := repo.Delete(&r); err != nil {
+	if err := repo.db.Delete(&r).Error; err != nil {
 		return err
 	}
 	return nil

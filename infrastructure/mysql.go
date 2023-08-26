@@ -10,11 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type SqlHandler struct {
-	db *gorm.DB
-}
-
-func NewSqlHandler() *SqlHandler {
+func NewDB() *gorm.DB {
 
 	if os.Getenv("GO_ENV") == "dev" {
 		err := godotenv.Load()
@@ -34,49 +30,11 @@ func NewSqlHandler() *SqlHandler {
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-	SqlHandler := new(SqlHandler)
-	SqlHandler.db = db
-	return SqlHandler
+	return db
 
 }
 
-func (handler *SqlHandler) Find(obj interface{}, value ...interface{}) error {
-	if err := handler.db.Find(obj).Error; err != nil {
-		return err
-	}
-	return nil
-}
-
-func (handler *SqlHandler) First(obj interface{}, where ...interface{}) error {
-	if err := handler.db.First(obj, where...).Error; err != nil {
-		return err
-	}
-	return nil
-}
-
-// Reservation専用のFind。UserとRoomをPreloadする
-func (handler *SqlHandler) FindReservation(obj interface{}, value ...interface{}) error {
-	if err := handler.db.Preload("User").Preload("Room").Find(obj).Error; err != nil {
-		return err
-	}
-	return nil
-}
-
-func (handler *SqlHandler) Create(obj interface{}) error {
-	if err := handler.db.Create(obj).Error; err != nil {
-		return err
-	}
-	return nil
-}
-
-func (handler *SqlHandler) Save(obj interface{}) error {
-	if err := handler.db.Save(obj).Error; err != nil {
-		return err
-	}
-	return nil
-}
-
+/*
 func (handler *SqlHandler) Delete(obj interface{}, value ...interface{}) error {
 	if err := handler.db.Delete(obj).Error; err != nil {
 		return err
@@ -91,16 +49,8 @@ func (handler *SqlHandler) Exec(sql string, values ...interface{}) error {
 	return nil
 }
 
-func (handler *SqlHandler) Raw(sql string, values ...interface{}) error {
-	if err := handler.db.Raw(sql, values...).Error; err != nil {
-		return err
-	}
-	return nil
-}
-
-/*
-func (handler *SqlHandler) Where(sql string, value ...interface{}) error {
-	if err := handler.db.Where(sql, value...).Error; err != nil {
+func (handler *SqlHandler) FindReservation(obj interface{}, value ...interface{}) error {
+	if err := handler.db.Preload("User").Preload("Room").Find(obj).Error; err != nil {
 		return err
 	}
 	return nil
