@@ -80,7 +80,7 @@ func (uu *UserUsecase) Login(u *model.User) (string, error) {
 	})
 	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
 	if err != nil {
-		return "3", err
+		return "", err
 	}
 	return tokenString, nil
 }
