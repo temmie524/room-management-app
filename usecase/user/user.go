@@ -67,12 +67,11 @@ func (uu *UserUsecase) SignUp(u *model.User) (*model.User, error) {
 }
 
 func (uu *UserUsecase) Login(u *model.User) (string, error) {
-	storedUser := model.User{}
-	if err := uu.ur.FindByEmail(u.Email); err != nil {
-		return "", nil
-	}
-	err := bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(u.Password))
+	storedUser, err := uu.ur.FindByEmail(u.Email)
 	if err != nil {
+		return "", err
+	}
+	if err := bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(u.Password)); err != nil {
 		return "", err
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -81,7 +80,7 @@ func (uu *UserUsecase) Login(u *model.User) (string, error) {
 	})
 	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
 	if err != nil {
-		return "", nil
+		return "3", err
 	}
 	return tokenString, nil
 }

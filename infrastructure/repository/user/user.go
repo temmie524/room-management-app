@@ -50,17 +50,17 @@ func (repo *UserRepository) Update(u *model.User) (*model.User, error) {
 
 func (repo *UserRepository) DeleteById(id int) error {
 	user := model.User{}
-	if err := repo.db.Delete(&user).Error; err != nil {
+	if err := repo.db.Delete(&user, id).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (repo *UserRepository) FindByEmail(email string) error {
+func (repo *UserRepository) FindByEmail(email string) (*model.User, error) {
 	u := model.User{}
-	if err := repo.db.First(u, "email=?").Error; err != nil {
-		return err
+	if err := repo.db.Where("email = ?", email).First(&u).Error; err != nil {
+		return nil, err
 	}
-	return nil
+	return &u, nil
 
 }

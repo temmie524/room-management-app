@@ -90,11 +90,11 @@ func (uc *UserController) SignUp(c echo.Context) error {
 func (uc *UserController) LogIn(c echo.Context) error {
 	user := model.User{}
 	if err := c.Bind(&user); err != nil {
-		return c.JSON(500, err)
+		return c.JSON(http.StatusInternalServerError, err)
 	}
 	tokenString, err := uc.uu.Login(&user)
 	if err != nil {
-		return c.JSON(500, err)
+		return c.JSON(http.StatusInternalServerError, err)
 	}
 	cookie := http.Cookie{
 		Name:     "token",
@@ -102,7 +102,7 @@ func (uc *UserController) LogIn(c echo.Context) error {
 		Expires:  time.Now().Add(24 * time.Hour),
 		Path:     "/",
 		Domain:   os.Getenv("API_DOMAIN"),
-		Secure:   true, //TODO:postman確認時コメントアウト
+		Secure:   true, //TODO:postman確認時 false
 		HttpOnly: true,
 		SameSite: http.SameSiteNoneMode,
 	}
@@ -113,12 +113,12 @@ func (uc *UserController) LogIn(c echo.Context) error {
 
 func (uc *UserController) LogOut(c echo.Context) error {
 	cookie := http.Cookie{
-		Name:     "token",
-		Value:    "",
-		Expires:  time.Now(),
-		Path:     "/",
-		Domain:   os.Getenv("API_DOMAIN"),
-		Secure:   true, //TODO:postman確認時コメントアウト
+		Name:    "token",
+		Value:   "",
+		Expires: time.Now(),
+		Path:    "/",
+		Domain:  os.Getenv("API_DOMAIN"),
+		//Secure:   true, //TODO:postman確認時コメントアウト
 		HttpOnly: true,
 		SameSite: http.SameSiteNoneMode,
 	}
