@@ -35,5 +35,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	db.Debug().AutoMigrate(&model.User{}, &model.Room{}, &model.Reservation{})
+	if err := db.Debug().AutoMigrate(&model.User{}, &model.Room{}, &model.Reservation{}); err != nil {
+		fmt.Println("Database migrate failed.")
+	}
 }

@@ -33,21 +33,22 @@ func (repo *ReservationRepository) FindById(id int) (*model.Reservation, error) 
 	return &r, nil
 }
 
-func (repo *ReservationRepository) Store(r model.Reservation) (*model.Reservation, error) {
+func (repo *ReservationRepository) Store(r *model.Reservation) (*model.Reservation, error) {
 	if err := repo.db.Create(&r).Error; err != nil {
 		return nil, err
 	}
-	return &r, nil
+	return r, nil
 }
 
-func (repo *ReservationRepository) Update(r model.Reservation) (*model.Reservation, error) {
+func (repo *ReservationRepository) Update(r *model.Reservation) (*model.Reservation, error) {
 	if err := repo.db.Save(&r).Error; err != nil {
 		return nil, err
 	}
-	return &r, nil
+	return r, nil
 }
 
-func (repo *ReservationRepository) DeleteById(r model.Reservation) error {
+func (repo *ReservationRepository) DeleteById(id int) error {
+	r := model.Reservation{}
 	if err := repo.db.Delete(&r).Error; err != nil {
 		return err
 	}

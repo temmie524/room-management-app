@@ -33,26 +33,3 @@ func NewDB() *gorm.DB {
 	return db
 
 }
-
-/*
-func (handler *SqlHandler) Delete(obj interface{}, value ...interface{}) error {
-	if err := handler.db.Delete(obj).Error; err != nil {
-		return err
-	}
-	return nil
-}
-
-func (handler *SqlHandler) Exec(sql string, values ...interface{}) error {
-	if err := handler.db.Exec(sql, values...).Error; err != nil {
-		return err
-	}
-	return nil
-}
-
-func (handler *SqlHandler) FindReservation(obj interface{}, value ...interface{}) error {
-	if err := handler.db.Preload("User").Preload("Room").Find(obj).Error; err != nil {
-		return err
-	}
-	return nil
-}
-*/

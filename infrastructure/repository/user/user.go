@@ -34,30 +34,30 @@ func (repo *UserRepository) FindById(id int) (*model.User, error) {
 	return &user, nil
 }
 
-func (repo *UserRepository) Store(u model.User) (*model.User, error) {
+func (repo *UserRepository) Store(u *model.User) (*model.User, error) {
 	if err := repo.db.Create(&u).Error; err != nil {
 		return nil, err
 	}
-	var user model.User = u
-	return &user, nil
+	return u, nil
 }
 
-func (repo *UserRepository) Update(u model.User) (*model.User, error) {
+func (repo *UserRepository) Update(u *model.User) (*model.User, error) {
 	if err := repo.db.Save(&u).Error; err != nil {
 		return nil, err
 	}
-	return &u, nil
+	return u, nil
 }
 
-func (repo *UserRepository) DeleteById(user model.User) error {
+func (repo *UserRepository) DeleteById(id int) error {
+	user := model.User{}
 	if err := repo.db.Delete(&user).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-// 引数については改修するかも
-func (repo *UserRepository) FindByEmail(u *model.User, email string) error {
+func (repo *UserRepository) FindByEmail(email string) error {
+	u := model.User{}
 	if err := repo.db.First(u, "email=?").Error; err != nil {
 		return err
 	}

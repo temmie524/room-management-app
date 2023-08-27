@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"os"
 	"room_app_back/domain/model"
-	"room_app_back/pkg"
 	"room_app_back/usecase/user"
 	"strconv"
 	"time"
@@ -13,61 +12,65 @@ import (
 )
 
 type UserController struct {
-	uu user.UserUsecase
+	uu user.IUserUsecase
 }
 
-func NewUserController(uu user.UserUsecase) *UserController {
-	return &UserController{
-		uu: uu,
-	}
+func NewUserController(uu user.IUserUsecase) *UserController {
+	return &UserController{uu}
 }
 
 func (uc *UserController) Index(c echo.Context) error {
 	users, err := uc.uu.Users()
 	if err != nil {
-		return c.JSON(500, pkg.NewError(err))
+		return c.JSON(500, err)
 	}
 
 	return c.JSON(200, users)
 }
 
 func (uc *UserController) Show(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(500, err)
+	}
 	user, err := uc.uu.UserById(id)
 	if err != nil {
-		return c.JSON(500, pkg.NewError(err))
+		return c.JSON(500, err)
 	}
 	return c.JSON(200, user)
 }
 
 func (uc *UserController) Create(c echo.Context) error {
 	u := model.User{}
-	c.Bind(&u)
-	user, err := uc.uu.Add(u)
+	if err := c.Bind(&u); err != nil {
+		return err
+	}
+	user, err := uc.uu.Add(&u)
 	if err != nil {
-		return c.JSON(500, pkg.NewError(err))
+		return c.JSON(500, err)
 	}
 	return c.JSON(201, user)
 }
 
 func (uc *UserController) Save(c echo.Context) error {
 	u := model.User{}
-	c.Bind(&u)
-	user, err := uc.uu.Update(u)
+	if err := c.Bind(&u); err != nil {
+		return err
+	}
+	user, err := uc.uu.Update(&u)
 	if err != nil {
-		return c.JSON(500, pkg.NewError(err))
+		return c.JSON(500, err)
 	}
 	return c.JSON(201, user)
 }
 
 func (uc *UserController) Delete(c echo.Context) error {
-	id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
-	user := model.User{
-		ID: uint(id),
-	}
-	err := uc.uu.DeleteById(user)
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(500, pkg.NewError(err))
+		return err
+	}
+	if err := uc.uu.DeleteById(id); err != nil {
+		return c.JSON(500, err)
 	}
 	return c.JSON(201, "deleted")
 }
@@ -75,11 +78,11 @@ func (uc *UserController) Delete(c echo.Context) error {
 func (uc *UserController) SignUp(c echo.Context) error {
 	user := model.User{}
 	if err := c.Bind(&user); err != nil {
-		return c.JSON(500, pkg.NewError(err))
+		return c.JSON(500, err)
 	}
-	userRes, err := uc.uu.SignUp(user)
+	userRes, err := uc.uu.SignUp(&user)
 	if err != nil {
-		return c.JSON(500, pkg.NewError(err))
+		return c.JSON(500, err)
 	}
 	return c.JSON(201, userRes)
 }
@@ -87,43 +90,50 @@ func (uc *UserController) SignUp(c echo.Context) error {
 func (uc *UserController) LogIn(c echo.Context) error {
 	user := model.User{}
 	if err := c.Bind(&user); err != nil {
-		return c.JSON(500, pkg.NewError(err))
+		return c.JSON(500, err)
 	}
-	tokenString, err := uc.uu.Login(user)
+	tokenString, err := uc.uu.Login(&user)
 	if err != nil {
-		return c.JSON(500, pkg.NewError(err))
+		return c.JSON(500, err)
 	}
-	cookie := new(http.Cookie)
-	cookie.Name = "token"
-	cookie.Value = tokenString
-	cookie.Expires = time.Now().Add(24 * time.Hour)
-	cookie.Path = "/"
-	cookie.Domain = os.Getenv("API_DOMAIN")
-	cookie.Secure = true //postman確認時コメントアウト
-	cookie.HttpOnly = true
-	cookie.SameSite = http.SameSiteNoneMode
-	c.SetCookie(cookie)
+	cookie := http.Cookie{
+		Name:     "token",
+		Value:    tokenString,
+		Expires:  time.Now().Add(24 * time.Hour),
+		Path:     "/",
+		Domain:   os.Getenv("API_DOMAIN"),
+		Secure:   true, //TODO:postman確認時コメントアウト
+		HttpOnly: true,
+		SameSite: http.SameSiteNoneMode,
+	}
+	c.SetCookie(&cookie)
 	return c.NoContent(http.StatusOK)
 
 }
 
 func (uc *UserController) LogOut(c echo.Context) error {
-	cookie := new(http.Cookie)
-	cookie.Name = "token"
-	cookie.Value = ""
-	cookie.Expires = time.Now()
-	cookie.Path = "/"
-	cookie.Domain = os.Getenv("API_DOMAIN")
-	cookie.Secure = true //postman確認時コメントアウト
-	cookie.HttpOnly = true
-	cookie.SameSite = http.SameSiteNoneMode
-	c.SetCookie(cookie)
+	cookie := http.Cookie{
+		Name:     "token",
+		Value:    "",
+		Expires:  time.Now(),
+		Path:     "/",
+		Domain:   os.Getenv("API_DOMAIN"),
+		Secure:   true, //TODO:postman確認時コメントアウト
+		HttpOnly: true,
+		SameSite: http.SameSiteNoneMode,
+	}
+	c.SetCookie(&cookie)
 	return c.NoContent(http.StatusOK)
 
 }
 
 func (uc *UserController) CsrfToken(c echo.Context) error {
-	token := c.Get("csrf").(string)
+	token, ok := c.Get("csrf").(string)
+	if !ok {
+		return c.JSON(http.StatusNotFound, echo.Map{
+			"error": "Resource not found",
+		})
+	}
 	return c.JSON(http.StatusOK, echo.Map{
 		"csrf_token": token,
 	})
