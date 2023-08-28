@@ -26,7 +26,10 @@ func (rc *ReservationController) Index(c echo.Context) error {
 }
 
 func (rc *ReservationController) Show(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
 	reservation, err := rc.ru.ReservationById(id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
