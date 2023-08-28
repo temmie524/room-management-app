@@ -34,8 +34,8 @@ func Init() {
 		CookiePath:     "/",
 		CookieDomain:   os.Getenv("API_DOMAIN"),
 		CookieHTTPOnly: true,
-		//CookieSameSite: http.SameSiteNoneMode,  // TODO: 他の場合はNoneモードで！
-		CookieSameSite: http.SameSiteDefaultMode, // TODO: POSTMANの動作確認時はDefaultMode
+		CookieSameSite: http.SameSiteNoneMode, // TODO: 他の場合はNoneモードで！
+		//CookieSameSite: http.SameSiteDefaultMode, // TODO: POSTMANの動作確認時はDefaultMode
 	}))
 	db := NewDB()
 

@@ -97,12 +97,12 @@ func (uc *UserController) LogIn(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 	cookie := http.Cookie{
-		Name:    "token",
-		Value:   tokenString,
-		Expires: time.Now().Add(24 * time.Hour),
-		Path:    "/",
-		Domain:  os.Getenv("API_DOMAIN"),
-		//Secure:   true, //TODO:postman確認時コメントアウト
+		Name:     "token",
+		Value:    tokenString,
+		Expires:  time.Now().Add(24 * time.Hour),
+		Path:     "/",
+		Domain:   os.Getenv("API_DOMAIN"),
+		Secure:   true, //TODO:postman確認時コメントアウト
 		HttpOnly: true,
 		SameSite: http.SameSiteNoneMode,
 	}
@@ -113,12 +113,12 @@ func (uc *UserController) LogIn(c echo.Context) error {
 
 func (uc *UserController) LogOut(c echo.Context) error {
 	cookie := http.Cookie{
-		Name:    "token",
-		Value:   "",
-		Expires: time.Now(),
-		Path:    "/",
-		Domain:  os.Getenv("API_DOMAIN"),
-		//Secure:   true, //TODO:postman確認時コメントアウト
+		Name:     "token",
+		Value:    "",
+		Expires:  time.Now(),
+		Path:     "/",
+		Domain:   os.Getenv("API_DOMAIN"),
+		Secure:   true, //TODO:postman確認時コメントアウト
 		HttpOnly: true,
 		SameSite: http.SameSiteNoneMode,
 	}
