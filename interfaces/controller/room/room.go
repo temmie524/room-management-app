@@ -1,7 +1,7 @@
 package room
 
 import (
-	"room_app_back/pkg"
+	"net/http"
 	"room_app_back/usecase/room"
 	"strconv"
 
@@ -9,29 +9,29 @@ import (
 )
 
 type RoomController struct {
-	ru room.RoomUsecase
+	ru room.IRoomUsecase
 }
 
-func NewRoomController(ru room.RoomUsecase) *RoomController {
-	return &RoomController{
-		ru: ru,
-	}
+func NewRoomController(ru room.IRoomUsecase) *RoomController {
+	return &RoomController{ru}
 }
 
 func (rc *RoomController) Index(c echo.Context) error {
 	rooms, err := rc.ru.Rooms()
 	if err != nil {
-
-		return c.JSON(500, pkg.NewError(err))
+		return c.JSON(http.StatusInternalServerError, err)
 	}
-	return c.JSON(200, rooms)
+	return c.JSON(http.StatusOK, rooms)
 }
 
 func (rc *RoomController) Show(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
 	room, err := rc.ru.RoomById(id)
 	if err != nil {
-		return c.JSON(500, pkg.NewError(err))
+		return c.JSON(http.StatusInternalServerError, err)
 	}
-	return c.JSON(200, room)
+	return c.JSON(http.StatusOK, room)
 }

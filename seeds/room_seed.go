@@ -29,7 +29,9 @@ func main() {
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	sqlDB, _ := db.DB()
-	RoomSeeds(db)
+	if err := RoomSeeds(db); err != nil {
+		fmt.Println(err)
+	}
 	defer fmt.Println("Successfully migrated seeds!!")
 	defer sqlDB.Close()
 

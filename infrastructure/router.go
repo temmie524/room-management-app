@@ -34,24 +34,22 @@ func Init() {
 		CookiePath:     "/",
 		CookieDomain:   os.Getenv("API_DOMAIN"),
 		CookieHTTPOnly: true,
-		CookieSameSite: http.SameSiteNoneMode,
-		//CookieSameSite: http.SameSiteDefaultMode,
-		//CookieMaxAge: 60,
-
+		//CookieSameSite: http.SameSiteNoneMode,  // TODO: 他の場合はNoneモードで！
+		CookieSameSite: http.SameSiteDefaultMode, // TODO: POSTMANの動作確認時はDefaultMode
 	}))
 	db := NewDB()
 
 	userRepository := usre.NewUserRepository(db)
 	userUsecase := usus.NewUserUsecase(userRepository)
-	userController := usco.NewUserController(*userUsecase)
+	userController := usco.NewUserController(userUsecase)
 
 	reservationRepository := rere.NewReservationRepository(db)
 	reserationUsecase := reus.NewReservationUsecase(reservationRepository)
-	reservationController := reco.NewReservationController(*reserationUsecase)
+	reservationController := reco.NewReservationController(reserationUsecase)
 
 	roomRepository := rore.NewRoomRepository(db)
 	roomUsecase := rous.NewRoomUsecase(roomRepository)
-	roomController := roco.NewRoomController(*roomUsecase)
+	roomController := roco.NewRoomController(roomUsecase)
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
@@ -68,7 +66,6 @@ func Init() {
 	e.DELETE("/users/:id", userController.Delete)
 
 	//Reservation Routes
-
 	rs := e.Group("/reservations")
 	rs.Use(echojwt.WithConfig(echojwt.Config{
 		SigningKey:  []byte(os.Getenv("SECRET")),
