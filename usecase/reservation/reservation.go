@@ -17,7 +17,7 @@ type ReservationUsecase struct {
 	rr reservation.ReservationRepository
 }
 
-func NewReservationUsecase(rr reservation.ReservationRepository) *ReservationUsecase {
+func NewReservationUsecase(rr reservation.ReservationRepository) IReservationUsecase {
 	return &ReservationUsecase{rr}
 }
 

@@ -14,7 +14,7 @@ type RoomUsecase struct {
 	rr room.RoomRepository
 }
 
-func NewRoomUsecase(rr room.RoomRepository) *RoomUsecase {
+func NewRoomUsecase(rr room.RoomRepository) IRoomUsecase {
 	return &RoomUsecase{rr}
 }
 
