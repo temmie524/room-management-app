@@ -16,7 +16,7 @@ func NewUserRepository(db *gorm.DB) user.UserRepository {
 }
 
 func (repo *UserRepository) FindAll() (*model.Users, error) {
-	var users model.Users
+	users := model.Users{}
 
 	if err := repo.db.Find(&users).Error; err != nil {
 		return nil, err
@@ -26,7 +26,7 @@ func (repo *UserRepository) FindAll() (*model.Users, error) {
 }
 
 func (repo *UserRepository) FindById(id int) (*model.User, error) {
-	var user model.User
+	user := model.User{}
 
 	if err := repo.db.First(&user, id).Error; err != nil {
 		return nil, err

@@ -12,7 +12,7 @@ import (
 
 type IUserUsecase interface {
 	Add(u *model.User) (*model.User, error)
-	Update(u *model.User) (*model.User, error)
+	Update(input *AddInput) (*AddOutput, error)
 	DeleteById(id int) error
 	Users() (*model.Users, error)
 	UserById(id int) (*model.User, error)
@@ -36,8 +36,25 @@ func (uu *UserUsecase) Add(u *model.User) (*model.User, error) {
 	return uu.ur.Store(u)
 }
 
-func (uu *UserUsecase) Update(u *model.User) (*model.User, error) {
-	return uu.ur.Update(u)
+func (uu *UserUsecase) Update(input *AddInput) (*AddOutput, error) {
+	u := &model.User{
+		ID:        input.ID,
+		Email:     input.Email,
+		LastName:  input.LastName,
+		FirstName: input.FirstName,
+		Password:  input.Password,
+		Age:       input.Age,
+		Role:      input.Role,
+		IdNumber:  input.IdNumber,
+		CreatedAt: input.CreatedAt,
+		UpdatedAt: input.UpdatedAt,
+	}
+	output, err := uu.ur.Update(u)
+	if err != nil {
+		return &AddOutput{}, err
+	}
+	out := &AddOutput{User: output}
+	return out, err
 }
 
 func (uu *UserUsecase) DeleteById(id int) error {

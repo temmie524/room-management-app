@@ -58,15 +58,15 @@ func (uc *UserController) Create(c echo.Context) error {
 }
 
 func (uc *UserController) Save(c echo.Context) error {
-	u := model.User{}
-	if err := c.Bind(&u); err != nil {
+	input := user.AddInput{}
+	if err := c.Bind(&input); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	user, err := uc.uu.Update(&u)
+	output, err := uc.uu.Update(&input)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, user)
+	return c.JSON(http.StatusOK, output)
 }
 
 func (uc *UserController) Delete(c echo.Context) error {
