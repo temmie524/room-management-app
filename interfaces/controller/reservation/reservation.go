@@ -65,7 +65,7 @@ func (rc *ReservationController) Save(c echo.Context) error {
 func (rc *ReservationController) Delete(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return err
+		return c.JSON(http.StatusInternalServerError, err)
 	}
 	if err := rc.ru.DeleteById(id); err != nil {
 		return c.JSON(http.StatusInternalServerError, err)

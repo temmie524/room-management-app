@@ -2,7 +2,6 @@ package user
 
 import (
 	"net/http"
-	"os"
 	"room_app_back/config"
 	"room_app_back/domain/model"
 	"room_app_back/usecase/user"
@@ -106,7 +105,7 @@ func (uc *UserController) LogIn(c echo.Context) error {
 		Value:    tokenString,
 		Expires:  time.Now().Add(24 * time.Hour),
 		Path:     "/",
-		Domain:   os.Getenv("API_DOMAIN"),
+		Domain:   uc.cnf.API_DOMAIN,
 		Secure:   true, //TODO:postman確認時コメントアウト
 		HttpOnly: true,
 		SameSite: http.SameSiteNoneMode,
@@ -122,7 +121,7 @@ func (uc *UserController) LogOut(c echo.Context) error {
 		Value:    "",
 		Expires:  time.Now(),
 		Path:     "/",
-		Domain:   os.Getenv("API_DOMAIN"),
+		Domain:   uc.cnf.API_DOMAIN,
 		Secure:   true, //TODO:postman確認時コメントアウト
 		HttpOnly: true,
 		SameSite: http.SameSiteNoneMode,
