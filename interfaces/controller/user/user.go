@@ -3,6 +3,7 @@ package user
 import (
 	"net/http"
 	"os"
+	"room_app_back/config"
 	"room_app_back/domain/model"
 	"room_app_back/usecase/user"
 	"strconv"
@@ -12,11 +13,15 @@ import (
 )
 
 type UserController struct {
-	uu user.IUserUsecase
+	uu  user.IUserUsecase
+	cnf *config.AppConfig
 }
 
-func NewUserController(uu user.IUserUsecase) *UserController {
-	return &UserController{uu}
+func NewUserController(uu user.IUserUsecase, cnf *config.AppConfig) *UserController {
+	return &UserController{
+		uu:  uu,
+		cnf: cnf,
+	}
 }
 
 func (uc *UserController) Index(c echo.Context) error {

@@ -3,6 +3,7 @@ package infrastructure
 import (
 	"net/http"
 	"os"
+	"room_app_back/config"
 	rere "room_app_back/infrastructure/repository/reservation"
 	rore "room_app_back/infrastructure/repository/room"
 	usre "room_app_back/infrastructure/repository/user"
@@ -38,10 +39,11 @@ func Init() {
 		//CookieSameSite: http.SameSiteDefaultMode, // TODO: POSTMANの動作確認時はDefaultMode
 	}))
 	db := NewDB()
+	cnf := config.NewAppConfig()
 
 	userRepository := usre.NewUserRepository(db)
-	userUsecase := usus.NewUserUsecase(userRepository)
-	userController := usco.NewUserController(userUsecase)
+	userUsecase := usus.NewUserUsecase(userRepository, cnf)
+	userController := usco.NewUserController(userUsecase, cnf)
 
 	reservationRepository := rere.NewReservationRepository(db)
 	reservationUsecase := reus.NewReservationUsecase(reservationRepository)

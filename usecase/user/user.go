@@ -1,7 +1,7 @@
 package user
 
 import (
-	"os"
+	"room_app_back/config"
 	"room_app_back/domain/model"
 	"room_app_back/domain/repository/user"
 	"time"
@@ -21,11 +21,15 @@ type IUserUsecase interface {
 }
 
 type UserUsecase struct {
-	ur user.UserRepository
+	ur  user.UserRepository
+	cnf *config.AppConfig
 }
 
-func NewUserUsecase(ur user.UserRepository) IUserUsecase {
-	return &UserUsecase{ur}
+func NewUserUsecase(ur user.UserRepository, cnf *config.AppConfig) IUserUsecase {
+	return &UserUsecase{
+		ur:  ur,
+		cnf: cnf,
+	}
 }
 
 func (uu *UserUsecase) Add(u *model.User) (*model.User, error) {
@@ -78,7 +82,7 @@ func (uu *UserUsecase) Login(u *model.User) (string, error) {
 		"user_id": storedUser.ID,
 		"exp":     time.Now().Add(time.Hour * 12).Unix(),
 	})
-	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
+	tokenString, err := token.SignedString([]byte(uu.cnf.SECRET_KEY))
 	if err != nil {
 		return "", err
 	}
