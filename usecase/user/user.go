@@ -37,7 +37,7 @@ func (uu *UserUsecase) Add(u *model.User) (*model.User, error) {
 }
 
 func (uu *UserUsecase) Update(input *AddInput) (*AddOutput, error) {
-	u := &model.User{
+	output, err := uu.ur.Update(&model.User{
 		ID:        input.ID,
 		Email:     input.Email,
 		LastName:  input.LastName,
@@ -48,13 +48,11 @@ func (uu *UserUsecase) Update(input *AddInput) (*AddOutput, error) {
 		IdNumber:  input.IdNumber,
 		CreatedAt: input.CreatedAt,
 		UpdatedAt: input.UpdatedAt,
-	}
-	output, err := uu.ur.Update(u)
+	})
 	if err != nil {
 		return &AddOutput{}, err
 	}
-	out := &AddOutput{User: output}
-	return out, err
+	return &AddOutput{User: output}, err
 }
 
 func (uu *UserUsecase) DeleteById(id int) error {
