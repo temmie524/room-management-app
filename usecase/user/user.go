@@ -11,13 +11,13 @@ import (
 )
 
 type IUserUsecase interface {
-	Add(u *model.User) (*model.User, error)
+	Add(input *AddInput) (*AddOutput, error)
 	Update(input *AddInput) (*AddOutput, error)
 	DeleteById(id int) error
-	Users() (*model.Users, error)
-	UserById(id int) (*model.User, error)
-	SignUp(u *model.User) (*model.User, error)
-	Login(u *model.User) (string, error)
+	Users() (*AddOutputs, error)
+	UserById(id int) (*AddOutput, error)
+	SignUp(input *AddInput) (*AddOutput, error)
+	Login(input *AddInput) (string, error)
 }
 
 type UserUsecase struct {
@@ -32,8 +32,23 @@ func NewUserUsecase(ur user.UserRepository, cnf *config.AppConfig) IUserUsecase 
 	}
 }
 
-func (uu *UserUsecase) Add(u *model.User) (*model.User, error) {
-	return uu.ur.Store(u)
+func (uu *UserUsecase) Add(input *AddInput) (*AddOutput, error) {
+	output, err := uu.ur.Store(&model.User{
+		ID:        input.ID,
+		Email:     input.Email,
+		LastName:  input.LastName,
+		FirstName: input.FirstName,
+		Password:  input.Password,
+		Age:       input.Age,
+		Role:      input.Role,
+		IdNumber:  input.IdNumber,
+		CreatedAt: input.CreatedAt,
+		UpdatedAt: input.UpdatedAt,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &AddOutput{output}, err
 }
 
 func (uu *UserUsecase) Update(input *AddInput) (*AddOutput, error) {
@@ -50,47 +65,62 @@ func (uu *UserUsecase) Update(input *AddInput) (*AddOutput, error) {
 		UpdatedAt: input.UpdatedAt,
 	})
 	if err != nil {
-		return &AddOutput{}, err
+		return nil, err
 	}
-	return &AddOutput{User: output}, err
+	return &AddOutput{output}, err
 }
 
 func (uu *UserUsecase) DeleteById(id int) error {
 	return uu.ur.DeleteById(id)
 }
 
-func (uu *UserUsecase) Users() (*model.Users, error) {
-	return uu.ur.FindAll()
+func (uu *UserUsecase) Users() (*AddOutputs, error) {
+	users, err := uu.ur.FindAll()
+	if err != nil {
+		return nil, err
+	}
+	var outputs AddOutputs
+	for _, _u := range *users {
+		u := _u
+		outputs = append(outputs, AddOutput{&u})
+	}
+	return &outputs, nil
 }
 
-func (uu *UserUsecase) UserById(id int) (*model.User, error) {
-	return uu.ur.FindById(id)
+func (uu *UserUsecase) UserById(id int) (*AddOutput, error) {
+	user, err := uu.ur.FindById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &AddOutput{User: user}, err
 }
 
-func (uu *UserUsecase) SignUp(u *model.User) (*model.User, error) {
-	hash, err := bcrypt.GenerateFromPassword([]byte(u.Password), 10)
+func (uu *UserUsecase) SignUp(input *AddInput) (*AddOutput, error) {
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(input.Password), 10)
 	if err != nil {
 		return nil, err
 	}
 	newUser := model.User{
-		Email:    u.Email,
+		Email:    input.Email,
 		Password: string(hash),
 	}
 
 	resUser, err := uu.ur.Store(&newUser)
 	if err != nil {
-		return &model.User{}, err
+		return nil, err
 	}
-	return resUser, nil
+	return &AddOutput{User: resUser}, nil
 
 }
 
-func (uu *UserUsecase) Login(u *model.User) (string, error) {
-	storedUser, err := uu.ur.FindByEmail(u.Email)
+func (uu *UserUsecase) Login(input *AddInput) (string, error) {
+	storedUser, err := uu.ur.FindByEmail(input.Email)
 	if err != nil {
 		return "", err
 	}
-	if err := bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(u.Password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(input.Password)); err != nil {
 		return "", err
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{

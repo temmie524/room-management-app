@@ -7,5 +7,5 @@ import (
 type AddOutputs []AddOutput
 
 type AddOutput struct {
-	User *model.User `json:"user"`
+	*model.User
 }

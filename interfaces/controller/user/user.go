@@ -3,7 +3,6 @@ package user
 import (
 	"net/http"
 	"room_app_back/config"
-	"room_app_back/domain/model"
 	"room_app_back/usecase/user"
 	"strconv"
 	"time"
@@ -45,15 +44,15 @@ func (uc *UserController) Show(c echo.Context) error {
 }
 
 func (uc *UserController) Create(c echo.Context) error {
-	u := model.User{}
+	u := user.AddInput{}
 	if err := c.Bind(&u); err != nil {
 		return err
 	}
-	user, err := uc.uu.Add(&u)
+	output, err := uc.uu.Add(&u)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, user)
+	return c.JSON(http.StatusOK, output)
 }
 
 func (uc *UserController) Save(c echo.Context) error {
@@ -80,23 +79,23 @@ func (uc *UserController) Delete(c echo.Context) error {
 }
 
 func (uc *UserController) SignUp(c echo.Context) error {
-	user := model.User{}
-	if err := c.Bind(&user); err != nil {
+	input := user.AddInput{}
+	if err := c.Bind(&input); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	userRes, err := uc.uu.SignUp(&user)
+	output, err := uc.uu.SignUp(&input)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
-	return c.JSON(http.StatusOK, userRes)
+	return c.JSON(http.StatusOK, output)
 }
 
 func (uc *UserController) LogIn(c echo.Context) error {
-	user := model.User{}
-	if err := c.Bind(&user); err != nil {
+	input := user.AddInput{}
+	if err := c.Bind(&input); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	tokenString, err := uc.uu.Login(&user)
+	tokenString, err := uc.uu.Login(&input)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
 	}

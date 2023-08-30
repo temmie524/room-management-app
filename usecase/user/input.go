@@ -2,7 +2,7 @@ package user
 
 import "time"
 
-type AddInputs []AddInput
+type AddInputs []AddInputs
 
 type AddInput struct {
 	ID        uint      `json:"id"`

@@ -16,7 +16,7 @@ func NewUserRepository(db *gorm.DB) user.UserRepository {
 }
 
 func (repo *UserRepository) FindAll() (*model.Users, error) {
-	users := model.Users{}
+	var users model.Users
 
 	if err := repo.db.Find(&users).Error; err != nil {
 		return nil, err
@@ -26,7 +26,7 @@ func (repo *UserRepository) FindAll() (*model.Users, error) {
 }
 
 func (repo *UserRepository) FindById(id int) (*model.User, error) {
-	user := model.User{}
+	var user model.User
 
 	if err := repo.db.First(&user, id).Error; err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func (repo *UserRepository) DeleteById(id int) error {
 }
 
 func (repo *UserRepository) FindByEmail(email string) (*model.User, error) {
-	u := model.User{}
+	var u model.User
 	if err := repo.db.Where("email = ?", email).First(&u).Error; err != nil {
 		return nil, err
 	}
