@@ -7,6 +7,6 @@ type UserRepository interface {
 	Update(*model.User) (*model.User, error)
 	DeleteById(id int) error
 	FindAll() (*model.Users, error)
-	FindById(int) (*model.User, error)
+	FindById(id int) (*model.User, error)
 	FindByEmail(string) (*model.User, error)
 }
