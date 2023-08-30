@@ -2,7 +2,6 @@ package reservation
 
 import (
 	"net/http"
-	"room_app_back/domain/model"
 	"room_app_back/usecase/reservation"
 	"strconv"
 
@@ -39,7 +38,7 @@ func (rc *ReservationController) Show(c echo.Context) error {
 }
 
 func (rc *ReservationController) Create(c echo.Context) error {
-	r := model.Reservation{}
+	var r reservation.AddInput
 	if err := c.Bind(&r); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
@@ -51,7 +50,7 @@ func (rc *ReservationController) Create(c echo.Context) error {
 }
 
 func (rc *ReservationController) Save(c echo.Context) error {
-	r := model.Reservation{}
+	var r reservation.AddInput
 	if err := c.Bind(&r); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
