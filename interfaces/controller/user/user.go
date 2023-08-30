@@ -104,7 +104,7 @@ func (uc *UserController) LogIn(c echo.Context) error {
 		Value:    tokenString,
 		Expires:  time.Now().Add(24 * time.Hour),
 		Path:     "/",
-		Domain:   uc.cnf.API_DOMAIN,
+		Domain:   uc.cnf.ApiDomain,
 		Secure:   true, //TODO:postman確認時コメントアウト
 		HttpOnly: true,
 		SameSite: http.SameSiteNoneMode,
@@ -120,7 +120,7 @@ func (uc *UserController) LogOut(c echo.Context) error {
 		Value:    "",
 		Expires:  time.Now(),
 		Path:     "/",
-		Domain:   uc.cnf.API_DOMAIN,
+		Domain:   uc.cnf.ApiDomain,
 		Secure:   true, //TODO:postman確認時コメントアウト
 		HttpOnly: true,
 		SameSite: http.SameSiteNoneMode,
