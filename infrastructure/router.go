@@ -1,20 +1,20 @@
 package infrastructure
 
 import (
+	"backend/config"
+	rere "backend/infrastructure/repository/reservation"
+	rore "backend/infrastructure/repository/room"
+	usre "backend/infrastructure/repository/user"
 	"net/http"
 	"os"
-	"room_app_back/config"
-	rere "room_app_back/infrastructure/repository/reservation"
-	rore "room_app_back/infrastructure/repository/room"
-	usre "room_app_back/infrastructure/repository/user"
 
-	reco "room_app_back/interfaces/controller/reservation"
-	roco "room_app_back/interfaces/controller/room"
-	usco "room_app_back/interfaces/controller/user"
+	reco "backend/interfaces/controller/reservation"
+	roco "backend/interfaces/controller/room"
+	usco "backend/interfaces/controller/user"
 
-	reus "room_app_back/usecase/reservation"
-	rous "room_app_back/usecase/room"
-	usus "room_app_back/usecase/user"
+	reus "backend/usecase/reservation"
+	rous "backend/usecase/room"
+	usus "backend/usecase/user"
 
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"

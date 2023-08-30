@@ -1,8 +1,8 @@
 package room
 
 import (
+	"backend/usecase/room"
 	"net/http"
-	"room_app_back/usecase/room"
 	"strconv"
 
 	"github.com/labstack/echo/v4"

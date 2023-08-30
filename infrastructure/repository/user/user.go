@@ -1,8 +1,8 @@
 package user
 
 import (
-	"room_app_back/domain/model"
-	"room_app_back/domain/repository/user"
+	"backend/domain/model"
+	"backend/domain/repository/user"
 
 	"gorm.io/gorm"
 )

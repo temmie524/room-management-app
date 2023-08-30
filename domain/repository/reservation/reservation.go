@@ -1,6 +1,6 @@
 package reservation
 
-import model "room_app_back/domain/model"
+import model "backend/domain/model"
 
 type ReservationRepository interface {
 	Store(*model.Reservation) (*model.Reservation, error)

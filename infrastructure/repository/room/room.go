@@ -1,8 +1,8 @@
 package room
 
 import (
-	"room_app_back/domain/model"
-	"room_app_back/domain/repository/room"
+	"backend/domain/model"
+	"backend/domain/repository/room"
 
 	"gorm.io/gorm"
 )

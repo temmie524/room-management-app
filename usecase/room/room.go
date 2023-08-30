@@ -1,7 +1,7 @@
 package room
 
 import (
-	"room_app_back/domain/repository/room"
+	"backend/domain/repository/room"
 )
 
 type IRoomUsecase interface {

@@ -1,4 +1,4 @@
-module room_app_back
+module backend
 
 go 1.20
 

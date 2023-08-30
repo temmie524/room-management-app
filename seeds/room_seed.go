@@ -1,10 +1,10 @@
 package main
 
 import (
+	"backend/domain/model"
 	"fmt"
 	"log"
 	"os"
-	"room_app_back/domain/model"
 	"time"
 
 	"github.com/joho/godotenv"

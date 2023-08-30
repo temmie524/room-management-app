@@ -1,8 +1,8 @@
 package reservation
 
 import (
-	"room_app_back/domain/model"
-	"room_app_back/domain/repository/reservation"
+	"backend/domain/model"
+	"backend/domain/repository/reservation"
 )
 
 type IReservationUsecase interface {

@@ -1,9 +1,9 @@
 package user
 
 import (
+	"backend/config"
+	"backend/usecase/user"
 	"net/http"
-	"room_app_back/config"
-	"room_app_back/usecase/user"
 	"strconv"
 	"time"
 

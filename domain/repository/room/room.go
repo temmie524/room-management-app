@@ -1,6 +1,6 @@
 package room
 
-import "room_app_back/domain/model"
+import "backend/domain/model"
 
 type RoomRepository interface {
 	FindAll() (*model.Rooms, error)

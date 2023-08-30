@@ -1,8 +1,8 @@
 package reservation
 
 import (
+	"backend/usecase/reservation"
 	"net/http"
-	"room_app_back/usecase/reservation"
 	"strconv"
 
 	"github.com/labstack/echo/v4"

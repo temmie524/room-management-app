@@ -1,6 +1,6 @@
 package user
 
-import model "room_app_back/domain/model"
+import "backend/domain/model"
 
 type UserRepository interface {
 	Store(*model.User) (*model.User, error)
