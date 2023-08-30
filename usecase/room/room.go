@@ -1,13 +1,12 @@
 package room
 
 import (
-	"room_app_back/domain/model"
 	"room_app_back/domain/repository/room"
 )
 
 type IRoomUsecase interface {
-	Rooms() (*model.Rooms, error)
-	RoomById(id int) (*model.Room, error)
+	Rooms() (*AddOutputs, error)
+	RoomById(id int) (*AddOutput, error)
 }
 
 type RoomUsecase struct {
@@ -18,10 +17,24 @@ func NewRoomUsecase(rr room.RoomRepository) IRoomUsecase {
 	return &RoomUsecase{rr}
 }
 
-func (ru *RoomUsecase) Rooms() (*model.Rooms, error) {
-	return ru.rr.FindAll()
+func (ru *RoomUsecase) Rooms() (*AddOutputs, error) {
+	rooms, err := ru.rr.FindAll()
+	if err != nil {
+		return nil, err
+	}
+	var outputs AddOutputs
+	for _, _r := range *rooms {
+		r := _r
+		outputs = append(outputs, AddOutput{&r})
+	}
+	return &outputs, nil
+
 }
 
-func (ru *RoomUsecase) RoomById(id int) (*model.Room, error) {
-	return ru.rr.FindById(id)
+func (ru *RoomUsecase) RoomById(id int) (*AddOutput, error) {
+	room, err := ru.rr.FindById(id)
+	if err != nil {
+		return nil, err
+	}
+	return &AddOutput{room}, nil
 }
