@@ -1,6 +1,6 @@
 package main
 
-import "room_app_back/infrastructure"
+import "backend/infrastructure"
 
 func main() {
 	infrastructure.Init()

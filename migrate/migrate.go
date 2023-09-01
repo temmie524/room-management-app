@@ -1,10 +1,10 @@
 package main
 
 import (
+	"backend/domain/model"
 	"fmt"
 	"log"
 	"os"
-	"room_app_back/domain/model"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
@@ -35,5 +35,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	db.Debug().AutoMigrate(&model.User{}, &model.Room{}, &model.Reservation{})
+	if err := db.Debug().AutoMigrate(&model.User{}, &model.Room{}, &model.Reservation{}); err != nil {
+		fmt.Println("Database migrate failed.")
+	}
 }

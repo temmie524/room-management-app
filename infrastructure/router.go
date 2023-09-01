@@ -1,53 +1,93 @@
 package infrastructure
 
 import (
-	"room_app_back/domain/repository"
-	"room_app_back/interfaces/controller"
-	"room_app_back/usecases/interactors"
+	"backend/config"
+	rere "backend/infrastructure/repository/reservation"
+	rore "backend/infrastructure/repository/room"
+	usre "backend/infrastructure/repository/user"
+	"net/http"
+	"os"
 
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	reco "backend/interfaces/controller/reservation"
+	roco "backend/interfaces/controller/room"
+	usco "backend/interfaces/controller/user"
+
+	reus "backend/usecase/reservation"
+	rous "backend/usecase/room"
+	usus "backend/usecase/user"
+
+	echojwt "github.com/labstack/echo-jwt/v4"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func Init() {
 	e := echo.New()
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"http://localhost:3000", os.Getenv("FE_URL")},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept,
+			echo.HeaderAccessControlAllowHeaders, echo.HeaderXCSRFToken},
+		AllowMethods:     []string{"GET", "PUT", "POST", "DELETE"},
+		AllowCredentials: true,
+	}))
 
-	sqlhandler := NewSqlHandler()
+	e.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{
+		CookiePath:     "/",
+		CookieDomain:   os.Getenv("API_DOMAIN"),
+		CookieHTTPOnly: true,
+		CookieSameSite: http.SameSiteNoneMode, // TODO: 他の場合はNoneモードで！
+		//CookieSameSite: http.SameSiteDefaultMode, // TODO: POSTMANの動作確認時はDefaultMode
+	}))
+	db := NewDB()
+	cnf := config.NewAppConfig()
 
-	userRepository := repository.NewUserRepository(sqlhandler)
-	userInteractor := interactors.NewUserInteractor(userRepository)
-	userController := controller.NewUserController(*userInteractor)
+	userRepository := usre.NewUserRepository(db)
+	userUsecase := usus.NewUserUsecase(userRepository, cnf)
+	userController := usco.NewUserController(userUsecase, cnf)
 
-	reservationRepository := repository.NewReservationRepository(sqlhandler)
-	reserationInteractor := interactors.NewReservationInteractor(reservationRepository)
-	reservationController := controller.NewReservationController(*reserationInteractor)
+	reservationRepository := rere.NewReservationRepository(db)
+	reservationUsecase := reus.NewReservationUsecase(reservationRepository)
+	reservationController := reco.NewReservationController(reservationUsecase)
 
-	roomRepository := repository.NewRoomRepository(sqlhandler)
-	roomInteractor := interactors.NewRoomInteractor(roomRepository)
-	roomController := controller.NewRoomController(*roomInteractor)
+	roomRepository := rore.NewRoomRepository(db)
+	roomUsecase := rous.NewRoomUsecase(roomRepository)
+	roomController := roco.NewRoomController(roomUsecase)
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	e.Use(middleware.CORS())
-
 	//User Routes
-	e.GET("/users", func(c echo.Context) error { return userController.Index(c) })
-	e.GET("/users/:id", func(c echo.Context) error { return userController.Show(c) })
-	e.POST("/new", func(c echo.Context) error { return userController.Create(c) })
-	e.PUT("/users/:id", func(c echo.Context) error { return userController.Save(c) })
-	e.DELETE("/users/:id", func(c echo.Context) error { return userController.Delete(c) })
+	e.GET("/users", userController.Index)
+	e.GET("/users/:id", userController.Show)
+	e.POST("/new", userController.Create)
+	e.POST("/signup", userController.SignUp)
+	e.POST("/login", userController.LogIn)
+	e.POST("/logout", userController.LogOut)
+	e.GET("/csrf", userController.CsrfToken)
+	e.PUT("/users/:id", userController.Save)
+	e.DELETE("/users/:id", userController.Delete)
 
 	//Reservation Routes
-	e.GET("/reservations", func(c echo.Context) error { return reservationController.Index(c) })
-	e.GET("/reservations/:id", func(c echo.Context) error { return reservationController.Show(c) })
-	e.POST("/reservations/new", func(c echo.Context) error { return reservationController.Create(c) })
-	e.PUT("/reservations/:id", func(c echo.Context) error { return reservationController.Save(c) })
-	e.DELETE("/reservations/:id", func(c echo.Context) error { return reservationController.Delete(c) })
+	rs := e.Group("/reservations")
+	rs.Use(echojwt.WithConfig(echojwt.Config{
+		SigningKey:  []byte(os.Getenv("SECRET")),
+		TokenLookup: "cookie:token",
+	}))
 
+	rs.GET("", reservationController.Index)
+	rs.GET("/:id", reservationController.Show)
+	rs.POST("/new", reservationController.Create)
+	rs.PUT("/:id", reservationController.Save)
+	rs.DELETE("/:id", reservationController.Delete)
+
+	rm := e.Group("/rooms")
+	rm.Use(echojwt.WithConfig(echojwt.Config{
+		SigningKey:  []byte(os.Getenv("SECRET")),
+		TokenLookup: "cookie:token",
+	}))
 	//Room Routes
-	e.GET("/rooms", func(c echo.Context) error { return roomController.Index(c) })
-	e.GET("/rooms/:id", func(c echo.Context) error { return roomController.Show(c) })
+	rm.GET("", roomController.Index)
+	rm.GET("/:id", roomController.Show)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
