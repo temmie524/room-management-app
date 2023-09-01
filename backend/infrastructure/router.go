@@ -22,9 +22,11 @@ import (
 )
 
 func Init() {
+	db := NewDB()
+	cnf := config.NewAppConfig()
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:3000", os.Getenv("FE_URL")},
+		AllowOrigins: []string{"http://localhost:3000", cnf.FeUrl},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept,
 			echo.HeaderAccessControlAllowHeaders, echo.HeaderXCSRFToken},
 		AllowMethods:     []string{"GET", "PUT", "POST", "DELETE"},
@@ -33,13 +35,11 @@ func Init() {
 
 	e.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{
 		CookiePath:     "/",
-		CookieDomain:   os.Getenv("API_DOMAIN"),
+		CookieDomain:   cnf.ApiDomain,
 		CookieHTTPOnly: true,
 		CookieSameSite: http.SameSiteNoneMode, // TODO: 他の場合はNoneモードで！
 		//CookieSameSite: http.SameSiteDefaultMode, // TODO: POSTMANの動作確認時はDefaultMode
 	}))
-	db := NewDB()
-	cnf := config.NewAppConfig()
 
 	userRepository := usre.NewUserRepository(db)
 	userUsecase := usus.NewUserUsecase(userRepository, cnf)
