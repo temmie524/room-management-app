@@ -46,7 +46,7 @@ func Init() {
 	userController := usco.NewUserController(userUsecase, cnf)
 
 	reservationRepository := rere.NewReservationRepository(db)
-	reservationUsecase := reus.NewReservationUsecase(reservationRepository)
+	reservationUsecase := reus.NewReservationUsecase(reservationRepository, cnf)
 	reservationController := reco.NewReservationController(reservationUsecase)
 
 	roomRepository := rore.NewRoomRepository(db)

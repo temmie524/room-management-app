@@ -39,10 +39,20 @@ func (rc *ReservationController) Show(c echo.Context) error {
 
 func (rc *ReservationController) Create(c echo.Context) error {
 	var r reservation.AddInput
+	cookie, err := c.Cookie("token")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	jwt := cookie.Value
+	userId, err := rc.ru.JwtToUserId(jwt)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
 	if err := c.Bind(&r); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	reservation, err := rc.ru.Add(&r)
+	reservation, err := rc.ru.Add(&r, userId)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
