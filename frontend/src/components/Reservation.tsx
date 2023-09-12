@@ -9,6 +9,7 @@ import { useMutateAuth } from '../hooks/useMutateAuth'
 import { useMutateReservation } from '../hooks/useMutateReservation'
 import { useQueryReservations } from '../hooks/useQueryReservations'
 import { ReservationItem } from './ReservationItem'
+import { useNavigate } from 'react-router-dom'
 
 export const Reservation = () => {
 	const queryClient = useQueryClient()
@@ -17,6 +18,8 @@ export const Reservation = () => {
 	const { data, isLoading } = useQueryReservations()
 	const { createReservationMutation, updateReservationMutation } = useMutateReservation()
   const { logoutMutation } = useMutateAuth()
+	const navi = useNavigate()
+	const GoBack = () => {navi(-1)}
 	const submitReservationHandler = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		if (editedReservation.id === 0)
@@ -39,13 +42,10 @@ export const Reservation = () => {
 			<div className="flex items-center my-3">
         <ShieldCheckIcon className="h-8 w-8 mr-3 text-indigo-500 cursor-pointer" />
         <span className="text-center text-3xl font-extrabold">
-          Reservation List
+          Room Reservation
         </span>
       </div>
-			<ArrowRightOnRectangleIcon
-				onClick={logout}
-				className="h-6 w-6 mr-6 text-blue-500 cursor-pointer"
-			/>
+
 			<form onSubmit={submitReservationHandler}>
         <input
           className="mb-3 mr-3 px-3 py-2 border border-gray-300"
@@ -75,23 +75,9 @@ export const Reservation = () => {
           {editedReservation.id === 0 ? 'Create' : 'Update'}
         </button>
       </form>
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : (
-        <ul className="my-5">
-          {data?.map((reservation) => (
-            <ReservationItem
-						key={reservation.id}
-						id={reservation.id}
-						purpose={reservation.purpose}
-						start_time={reservation.start_time}
-						end_time={reservation.end_time}
-						user_id={reservation.user_id}
-						room_id={reservation.room_id}
-						/>
-          ))}
-        </ul>
-      )}
+			<button 
+				className="disabled:opacity-40 py-1 px-4 rounded text-white bg-indigo-600"
+				onClick={() => GoBack()}>戻る</button>
     </div>
   )
 }

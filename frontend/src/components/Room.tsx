@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import { User } from '../types';
+import { Room } from '../types';
 import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/solid'
 import { useMutateAuth } from '../hooks/useMutateAuth'
 
-export const MyPage = () => {
+export const ShowRoom = () => {
     const {id} = useParams();
     const baseUrl = process.env.REACT_APP_BE_URL;
-    const [user, setUser] = useState<User | null>(null);
+    const [room, setRoom] = useState<Room | null>(null);
     const navi = useNavigate()
     const { logoutMutation } = useMutateAuth()
     const logout = () => {
@@ -16,31 +16,28 @@ export const MyPage = () => {
     }
 
     const GoBack = () => {navi(-1)}
-		const GoRooms = () => {navi(`/rooms`)}
+	const GoReservations = () => {navi(`/reservations`)}
 
     useEffect(() => {
-        axios.get<User>('http://localhost:8080/mypage').then((response) => {
-            setUser(response.data);
+        axios.get<Room>(`http://localhost:8080/rooms/${id}`).then((response) => {
+            setRoom(response.data);
         });
 }, []);
 
-if (!user) {
+if (!room) {
     return <div>Loading...</div>;
 }
 
   return (
 	<>
 		<div className="flex justify-center items-center flex-col min-h-screen text-gray-600 font-mono">
-			<h1>User Info	✨</h1>
-			<h1>YourID:{user.id}</h1>
-			<h1>LASTNAME:{user.last_name}</h1>
-			<h1>FIRSTNAME:{user.first_name}</h1>
-			<h1>AGE:{user.age}</h1>
-			<h1>ROLE:{user.role}</h1>
-			<h1>IDNUMBER:{user.id_number}</h1>
+			<h1>Room Info	✨</h1>
+			<h1>部屋番号:{room.room_num}</h1>
+			<h1>館(別館OR本館):{room.building}</h1>
+			
 			<button 
 				className="disabled:opacity-40 py-1 px-4 rounded text-white bg-indigo-600"
-				onClick={() => GoRooms()}>予約に進む</button>
+				onClick={() => GoReservations()}>予約に進む</button>
 			<button 
 				className="disabled:opacity-40 py-1 px-4 rounded text-white bg-indigo-600"
 				onClick={() => GoBack()}>一覧に戻る</button>

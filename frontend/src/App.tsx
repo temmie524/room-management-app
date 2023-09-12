@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import axios from 'axios'
 import { CsrfToken } from './types';
 import { Rooms }  from './components/Rooms';
+import { ShowRoom }  from './components/Room';
 import { NotFound } from './components/NotFound';
 import { MyPage } from './components/MyPage';
 
@@ -25,6 +26,7 @@ function App() {
 				<Route path="/" element={<Auth />} />
 				<Route path="/reservations" element={<Reservation />} />
 				<Route path="/rooms" element={<Rooms />} />
+				<Route path="/rooms/:id" element={<ShowRoom />} />
 				<Route path="/mypage" element={<MyPage />} />
 				<Route path="*" element={<NotFound />} />
 			</Routes>

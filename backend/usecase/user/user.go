@@ -4,6 +4,7 @@ import (
 	"backend/config"
 	"backend/domain/model"
 	"backend/domain/repository/user"
+	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -18,6 +19,7 @@ type IUserUsecase interface {
 	UserById(id int) (*AddOutput, error)
 	SignUp(input *AddInput) (*AddOutput, error)
 	Login(input *AddInput) (string, error)
+	JwtToUserId(tokenString string) (uint, error)
 }
 
 type UserUsecase struct {
@@ -132,4 +134,29 @@ func (uu *UserUsecase) Login(input *AddInput) (string, error) {
 		return "", err
 	}
 	return tokenString, nil
+}
+
+func (ru *UserUsecase) JwtToUserId(tokenString string) (uint, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		return []byte(ru.cnf.SecretKey), nil
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	if !token.Valid {
+		return 0, fmt.Errorf("invalid token")
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return 0, fmt.Errorf("invalid token claims")
+	}
+
+	userID, ok := claims["user_id"].(float64)
+	if !ok {
+		return 0, fmt.Errorf("user_id not found in token or not a number")
+	}
+
+	return uint(userID), nil
 }
