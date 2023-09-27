@@ -7,7 +7,6 @@ import { useMutateAuth } from '../hooks/useMutateAuth'
 
 export const MyPage = () => {
     const {id} = useParams();
-    const baseUrl = process.env.REACT_APP_BE_URL;
     const [user, setUser] = useState<User | null>(null);
     const navi = useNavigate()
     const { logoutMutation } = useMutateAuth()
@@ -19,7 +18,7 @@ export const MyPage = () => {
 		const GoRooms = () => {navi(`/rooms`)}
 
     useEffect(() => {
-        axios.get<User>('http://localhost:8080/mypage').then((response) => {
+        axios.get<User>(`${process.env.REACT_APP_API_URL}/mypage`).then((response) => {
             setUser(response.data);
         });
 }, []);

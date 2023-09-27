@@ -12,18 +12,23 @@ import (
 )
 
 func main() {
-	if os.Getenv("GO_ENV") == "dev" {
-		err := godotenv.Load(".env")
-		if err != nil {
-			log.Fatalln(err)
-		}
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatalln(err)
 	}
-	//以下の処理は分割するかも
-	dsn := fmt.Sprintf("%s:%s@tcp(127.0.0.1:%s)/%s?charset=utf8mb4&parseTime=True",
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASS"),
-		os.Getenv("DB_PORT"),
-		os.Getenv("DB_NAME"),
+
+	dbUser := os.Getenv("DB_USER")
+	dbPass := os.Getenv("DB_PASS")
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbName := os.Getenv("DB_NAME")
+
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True",
+		dbUser,
+		dbPass,
+		dbHost,
+		dbPort,
+		dbName,
 	)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})

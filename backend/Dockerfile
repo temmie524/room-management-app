@@ -1,4 +1,4 @@
-FROM golang:1.20-alpine
+FROM --platform=linux/x86_64 golang:1.20-alpine
 
 WORKDIR /usr/src/app
 

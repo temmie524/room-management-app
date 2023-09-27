@@ -26,7 +26,7 @@ export const Rooms = () => {
 
   //Roomsの配列を取得
 	useEffect(() => {
-		axios.get<Room[]>('http://localhost:8080/rooms').then((response) => {
+		axios.get<Room[]>(`${process.env.REACT_APP_API_URL}/rooms`).then((response) => {
 				setData(response.data);
 		})
 	}, [baseUrl]);

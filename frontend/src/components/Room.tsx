@@ -7,7 +7,6 @@ import { useMutateAuth } from '../hooks/useMutateAuth'
 
 export const ShowRoom = () => {
     const {id} = useParams();
-    const baseUrl = process.env.REACT_APP_BE_URL;
     const [room, setRoom] = useState<Room | null>(null);
     const navi = useNavigate()
     const { logoutMutation } = useMutateAuth()
@@ -19,7 +18,7 @@ export const ShowRoom = () => {
 	const GoReservations = () => {navi(`/reservations`)}
 
     useEffect(() => {
-        axios.get<Room>(`http://localhost:8080/rooms/${id}`).then((response) => {
+        axios.get<Room>(`${process.env.REACT_APP_API_URL}/rooms/${id}`).then((response) => {
             setRoom(response.data);
         });
 }, []);
