@@ -1,10 +1,40 @@
 version: '3'
 services:
+  frontend:
+    build:
+      context: ./frontend/
+    command: yarn start
+    ports:
+      - '3000:3000'
+    tty: true
+    depends_on: 
+      - backend
+    networks:
+      - roomapp
+
+  backend:
+    build:
+      context: ./backend/
+    ports:
+      - '8080:8080'
+    environment:
+      DB_PORT: ${DB_PORT}
+      DB_HOST: ${DB_HOST}
+      MYSQL_ROOT_PASSWORD: ${ROOT_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+    tty: true
+    stdin_open: true
+    depends_on: 
+      db:
+        condition: service_healthy
+    networks:
+      - roomapp
+
   db:
     image: mysql:8
-    container_name: mysql
     restart: always
-    
     environment:
       MYSQL_ROOT_PASSWORD: ${ROOT_PASS}
       MYSQL_DATABASE: ${DB_NAME}
@@ -13,7 +43,10 @@ services:
       TZ: ${TZ}
     ports:
         - ${DB_PORT}:3306
-    volumes:
-      - test:/var/lib/mysql
-volumes:
-  test:
+    networks:
+      - roomapp
+    healthcheck:
+      test: mysqladmin ping -h ${DB_HOST} -u$$MYSQL_USER -p$$MYSQL_PASSWORD
+networks:
+  roomapp:
+    driver: bridge
