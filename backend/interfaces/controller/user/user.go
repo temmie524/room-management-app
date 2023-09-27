@@ -43,6 +43,27 @@ func (uc *UserController) Show(c echo.Context) error {
 	return c.JSON(http.StatusOK, user)
 }
 
+func (uc *UserController) ShowLoginUser(c echo.Context) error {
+	cookie, err := c.Cookie("token")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	jwt := cookie.Value
+	id, err := uc.uu.JwtToUserId(jwt)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	user, err := uc.uu.UserById(int(id))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	return c.JSON(http.StatusOK, user)
+}
+
 func (uc *UserController) Create(c echo.Context) error {
 	u := user.AddInput{}
 	if err := c.Bind(&u); err != nil {

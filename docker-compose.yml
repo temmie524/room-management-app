@@ -46,7 +46,7 @@ services:
     networks:
       - roomapp
     healthcheck:
-      test: mysqladmin ping -h $${DB_HOST} -u$$MYSQL_USER -p$$MYSQL_PASSWORD
+      test: mysqladmin ping -h ${DB_HOST} -u$$MYSQL_USER -p$$MYSQL_PASSWORD
 networks:
   roomapp:
     driver: bridge
