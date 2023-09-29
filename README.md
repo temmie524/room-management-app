@@ -1,11 +1,15 @@
+## サービスの概要
+大学で学内活動（ゼミ、サークル）をする際の部屋予約アプリ
+
+
 <br />
 
 ## サービスへの想い
 
-私が現在在学している大学では、部屋をゼミやオンライン面接で利用する際に事務を通して予約します。
-しかし、勝手に利用する方がいてブッキングしたり、利用状況の確認のために逐一事務に足を運ばなくてはならず、事務の方もユーザー（ここでは教員と生徒）も大変だと感じました。
+私が現在在学している大学では、部屋をゼミやオンライン面接で利用する際に事務室を通して予約します。
+しかし、勝手に利用する方がいてブッキングしたり、利用状況の確認のために逐一事務室に足を運ばなくてはならず、事務員の方もユーザー（ここでは教員と生徒）も大変だと感じました。
 そこで人を通さずに予約、確認できるシステムを作りたいと思い、このサービスを開発しました。
-また、研究室の後輩にも開発に参加してもらい、実際の開発の体験を積んでもらうという側面も併せ持っています
+また、研究室の後輩にも開発に参加してもらい、実際の開発の体験をしてみる側面も併せ持っています
 
 
 <br />
@@ -25,12 +29,19 @@ Gplang、React、Docker、AWSの学習&開発
     - 部屋の予約を行う機能
     - 部屋の予約をキャンセルする機能
 
-
-
-
 <br />
 
 ## 使用技術
+
+| Category          | Technology Stack                                     |
+| ----------------- | --------------------------------------------------   |
+| Frontend          | TypeScript, React                       |
+| Backend           | Golang, echo, gorm                           |
+| Infrastructure    | Amazon Web Services                          |
+| Database          | MySQL                                           |
+| Environment setup | Docker                                               |
+| etc.              | Postman, Git, GitHub |
+
 
 <br />
 
@@ -49,18 +60,6 @@ Gplang、React、Docker、AWSの学習&開発
 - Reactなどのフロントは時間をあまり避けなかったので、今後アップデートしたい
 - GithubActionを活用したCI/CD化
 - Teraformなどを活用したIaC化
-
-<br />
-
-
-| Category          | Technology Stack                                     |
-| ----------------- | --------------------------------------------------   |
-| Frontend          | TypeScript, React                       |
-| Backend           | Golang, echo, gorm                           |
-| Infrastructure    | Amazon Web Services                          |
-| Database          | MySQL                                           |
-| Environment setup | Docker                                               |
-| etc.              | Postman, Git, GitHub |
 
 <br />
 
